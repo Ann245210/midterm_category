@@ -178,7 +178,7 @@
             dataType: "json",
           })
           .done(function(response) {
-            console.log(response);
+            // console.log(response);
             const check = document.querySelector(".check")
             let sec_items = response['sec_data'].filter(item => {
               return item['primary_id'] == 0;
@@ -203,7 +203,7 @@
                 $('input[data-check]:checked').each(function() {
                   checkedIds.push($(this).val()); // 獲取 checkbox 的 value 并添加到数组中
                   secIds.push($(this).data('id')); // 獲取每個被選中的複選框的 data-id 並添加到数组中
-                  // console.log(priName, checkedIds, secIds);
+                  console.log(priName, checkedIds, secIds);
                 });
 
                 $.ajax({
@@ -217,10 +217,10 @@
                     dataType: "json" // 期望從後端接收的數據類型
                   })
                   .done(function(response) {
-                    console.log("數據提交成功:", response);
+                    // console.log("數據提交成功:", response);
                     alert("主類別新增成功!")
                     $('#pri_name').val(""); //新增成功後清空欄位
-                    // 根據需要處理響應，例如顯示成功消息或更新 UI
+                    $('input[data-check]:checked').closest('.list-group-item').remove(); //新增成功後清空被勾選的次類別
                   })
                   .fail(function() {
                     alert("POST請求失敗");

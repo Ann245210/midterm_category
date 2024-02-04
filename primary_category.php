@@ -48,14 +48,14 @@
 
     .pagination .page-item.active .page-link {
       background-color: #dee2e6;
-      border-color: #dee2e6; 
+      border-color: #dee2e6;
       box-shadow: none;
-    
+
     }
   </style>
 </head>
 <!-- 列表內容 (單獨拉出來避免初始化時被清空)-->
-<!-- template 不會被渲染到頁面 -->
+<!-- (template 不會被渲染到頁面) -->
 <template id="item-template">
   <tr>
     <td class="text-center">
@@ -94,12 +94,12 @@
                     <table class="table table-bordered">
                       <tr>
                         <th>ID</th>
-                        <td class="category-id">
+                        <td class="category-id border-end">
                         </td>
                       </tr>
                       <tr>
                         <th>主類別名稱</th>
-                        <td>
+                        <td class="border-end">
                           <p class="text-md  mb-0 category-name"></p>
                         </td>
                       </tr>
@@ -152,22 +152,22 @@
             <!-- s-name = seconday name id -->
             <!-- Form for editing user details -->
             <form action="api/set_category.php" method="post">
+              <!-- 隱藏的input (只將資料傳送給後端) -->
               <input type="hidden" class="input-set-cate" name="p-id" value="">
 
               <table class="table table-bordered">
                 <tr>
                   <th>主類別</th>
                   <td>
-                    <!-- <input type="text" class="form-control" name="p-name" value=""> -->
-                    <p class="text-md  mb-0 category-name"></p>
+                    <input type="text" class="form-control input-set-cate-name" name="p-name" value="">
                   </td>
                 </tr>
                 <tr>
                   <th>次類別</th>
                   <td>
                     <select class="secondary-multiple-select form-control set-width" name="states[]" multiple="multiple">
-                      <!-- <option value="AL">Alabama</option>
-                      <option value="WY">Wyoming</option> -->
+                      <!-- 次類別項目 -->
+                      <!-- <option value="AL">Alabama</option>-->
                     </select>
                   </td>
                 </tr>
@@ -194,12 +194,6 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-              <!-- script不是會copy template嗎
-              這個部分也再template裡面
-              所以我可以為這個元素修改她的href
-              api_DeleteCategory.php 加上 ?delete=<id>
-              使用者按下這個button就會連帶傳參數給後端 -->
-
               <a type="submit" class="btn btn-danger btn-delete deleteYes" role="button" data-bs-dismiss="modal">確認</a>
             </div>
           </div>
@@ -521,25 +515,23 @@
       // init page
       fetchPage()
       // click page?
-      $('.pagination').on('click', '.page-link', function(event) {
-        event.preventDefault();
-        const page = this.getAttribute('data-page');
+      $('.pagination').on('click', '.page-link', function() { //選擇有pagination類的元素(ul)，運用事件委託，在.page-link元素上綁定點擊事件(li)，當page-link被點擊到時觸發函數
+        const page = this.getAttribute('data-page'); //定義page為點擊的那個頁碼
         fetchPage(page, search, order);
       });
       // click serach?
       $('#button-search').on('click', function() {
-        event.preventDefault();
-        search = $('.search-text').val()
+        search = $('.search-text').val() //將輸入搜尋欄的文字賦值給變數search
         fetchPage(1, search, order);
       })
-      $('#button-search-input').on('input', function(event) {
+      $('#button-search-input').on('input', function(event) { //運用input事件在元素的值發生改變時觸發，讓使用者清空搜尋欄位時重新加載頁面
         event.preventDefault();
         if (event.target.value == "") {
           search = "";
           fetchPage();
         }
       })
-      $('#button-search-input').on('keydown', function(event) {
+      $('#button-search-input').on('keydown', function(event) { //用enter鍵送出值
         // 檢查按下的鍵是否是 Enter 鍵
         if (event.key === "Enter" || event.keyCode === 13) {
           search = $('.search-text').val()
@@ -587,18 +579,20 @@
           let totalCount = response['totalCount']; //類別總數
           let sec_items = response['sec_data']; //次類別項目
           let paginationHTML = "";
+          console.log(response);
 
           const pagination = document.querySelector(".pagination");
-          $('#total-count').text(`共 ${totalCount} 筆`);
+
+          $('#total-count').text(`共 ${totalCount} 筆`); //顯示幾筆資料
           var selectedValues = [];
 
           items.forEach(item => {
             const template = document.getElementById('item-template');
             const clone = document.importNode(template.content, true); //深度複製template裡面的內容
-            clone.querySelectorAll('.btn-view').forEach(el => { //選擇 clone 元素中所有具有 btn-view 類別的元素。並返回一個 NodeList(包含所有匹配元素的集合)。
-              el.setAttribute('data-bs-target', '#modal-view-' + item['id']); //data-bs-target' 是要設置的屬性名。'#modal-view-' + item['id'] 是設置的屬性值。
+            clone.querySelectorAll('.btn-view').forEach(el => { //選擇 clone 元素中所有具有 btn-view 類別的元素。並返回一個 NodeList(包含所有匹配元素的集合)，並設置data-bs-target為屬性名。'#modal-view-' + item['id']為屬性值。
+              el.setAttribute('data-bs-target', '#modal-view-' + item['id']);
             })
-            clone.querySelector('.modal-view').setAttribute('id', 'modal-view-' + item['id']);
+            clone.querySelector('.modal-view').setAttribute('id', 'modal-view-' + item['id']); //設置modal-view的id (與btn-view做對應)
 
             clone.querySelectorAll('.btn-edit').forEach(el => {
               el.setAttribute('data-bs-target', '#modal-edit-' + item['id']);
@@ -610,37 +604,43 @@
             })
             clone.querySelector('.modal-delete').setAttribute('id', 'modal-delete-' + item['id']);
 
-            clone.querySelectorAll('.category-id').forEach((el) => {
+            clone.querySelectorAll('.category-id').forEach((el) => { //串接列表的id
               el.textContent = item['id'];
             });
-            clone.querySelector('.input-set-cate').value = item['id'];
-            clone.querySelectorAll('.category-name').forEach((el) => {
+
+            clone.querySelectorAll('.category-name').forEach((el) => { //串接列表的name
               el.textContent = item['name']
             });
-            sec_items.forEach(sec_item => {
+
+            clone.querySelector('.input-set-cate').value = item['id'];
+            clone.querySelector('.input-set-cate-name').value = item['name']; //欄位的值顯示類別名稱
+            
+            
+            sec_items.forEach(sec_item => { //foreach遍歷次類別欄位，並放進修改的次類別欄位中
               let tmp = `<option id="${sec_item['id']}" value="${sec_item['id']}">${sec_item['name']}</option>`;
               clone.querySelector('.secondary-multiple-select').innerHTML += tmp;
             })
-            selectedValues = []
+
+            selectedValues = [] //用來存儲被選擇的次類別id
             item['sec_id'].forEach((obj) => {
-              var sec_item = document.createElement("li");
+              var sec_item = document.createElement("li"); //新增li元素 (用來包次類別名稱)
               sec_item.textContent = obj['name'];
-              clone.querySelector('.secNameList').appendChild(sec_item);
-              selectedValues.push(obj['id']);
+              clone.querySelector('.secNameList').appendChild(sec_item); //把先前的sec_item內容放到ul(.secNameList)裡面
+              selectedValues.push(obj['id']); 
             })
             // console.log(selectedValues)
-            clone.querySelector('.secondary-multiple-select').setAttribute('id', 'sec-multi-' + item['id']);
-            document.querySelector('.items-container').appendChild(clone);
-            $('#sec-multi-' + item['id']).select2({
+            clone.querySelector('.secondary-multiple-select').setAttribute('id', 'sec-multi-' + item['id']); //將修改的次類別欄位設置id
+            document.querySelector('.items-container').appendChild(clone); //把先前的clone內容放到tbody(.items-container)裡面
+            $('#sec-multi-' + item['id']).select2({ //將slect2下拉選單設置對應 item 的（modal-edit-' + item['id']）中。
               dropdownParent: $('#modal-edit-' + item['id'])
             });
 
-            $('#sec-multi-' + item['id']).val(selectedValues)
+            $('#sec-multi-' + item['id']).val(selectedValues) //將 selectedValues 陣列中的值設置為選單的選中值，顯示哪些次類別被選中。
             $('#sec-multi-' + item['id']).trigger('change.select2');
 
           })
 
-          for (let i = 1; i <= pageCount; i++) {
+          for (let i = 1; i <= pageCount; i++) {  //根據pagecount顯示正確頁碼
             if (i == page)
               paginationHTML += `<li class="page-item active"><button class="page-link" data-page="${i}" >${i}</button></li>`;
             else

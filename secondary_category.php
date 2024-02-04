@@ -42,7 +42,7 @@
 
     .pagination .page-item.active .page-link {
       background-color: #dee2e6;
-      border-color: #dee2e6; 
+      border-color: #dee2e6;
       box-shadow: none;
     }
   </style>
@@ -128,6 +128,7 @@
             <!-- s-name = seconday name id -->
             <!-- Form for editing user details -->
             <form action="api/set_category.php" method="post">
+              <!-- 隱藏的input (只將資料傳送給後端) -->
               <input type="hidden" name="category" value="secondary">
               <input type="hidden" class="input-set-cate" name="s-id" value="">
 
@@ -187,7 +188,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../member_pages/member.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-user text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-user text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">會員管理/註冊</span>
           </a>
@@ -195,16 +196,16 @@
         <li class="nav-item">
           <a class="nav-link " href="../product-list_pages/product-list.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-sharp fa-solid fa-leaf text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-sharp fa-solid fa-leaf text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">商品管理</span>
           </a>
         </li>
-        <li class="nav-item"> 
+        <li class="nav-item">
           <!-- 連結改 -->
           <a class="nav-link active" href="../product-category_pages/primary_category.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-table-list text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-table-list text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">商品類別管理</span>
           </a>
@@ -212,7 +213,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../articles_pages/articles.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-message text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-message text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">文章管理</span>
           </a>
@@ -220,7 +221,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../order_pages/order.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-store text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-store text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">訂單管理</span>
           </a>
@@ -228,7 +229,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../teachers_pages/teachers.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-user-tie text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-user-tie text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">講師管理</span>
           </a>
@@ -236,7 +237,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../lecture_pages/lecture.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">課程管理</span>
           </a>
@@ -244,7 +245,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../coupon_pages/coupon.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">優惠券管理</span>
           </a>
@@ -330,18 +331,18 @@
               <!-- 搜尋欄 -->
               <div class="col">
                 <!-- <form action=""> -->
-                  <div class="input-group ">
-                    <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品次類別" name="search" />
-                    <button class="btn btn-primary" type="button" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
-                  </div>
+                <div class="input-group ">
+                  <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品次類別" name="search" />
+                  <button class="btn btn-primary" type="button" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
+                </div>
                 <!-- </form> -->
               </div>
               <div class="d-flex justify-content-between align-item-center">
                 <div id="total-count">
-                 
+
                 </div>
                 <div class="d-flex">
-                <div class="me-2 pt-2">排序</div>
+                  <div class="me-2 pt-2">排序</div>
                   <div class="btn-group sort-group">
                     <a class="btn btn-primary btn-sort" data-action="sort-1-9" href="product-list.php?order=1&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-short-wide fa-fw"></i></a>
                     <a class="btn btn-primary btn-sort" data-action="sort-9-1" href="product-lst.php?order=2&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
@@ -495,7 +496,7 @@
         fetchPage(1, search, order);
       })
       $('#button-search-input').on('input', function(event) {
-        if(event.target.value == "") {
+        if (event.target.value == "") {
           search = "";
           fetchPage();
         }
@@ -542,7 +543,7 @@
           dataType: "json",
         })
         .done(function(response) {
-          $('.items-container').empty();//初始化列表內容
+          $('.items-container').empty(); //初始化列表內容
           $('.pagination').empty(); //初始化分頁
           // console.log(response);
           let items = response['data']
@@ -576,13 +577,13 @@
             clone.querySelectorAll('.category-name').forEach((el) => {
               el.textContent = item['name']
             });
-            
+
             clone.querySelector('.input-set-cate').value = item['id'];
             clone.querySelector('.input-set-cate-name').value = item['name'];
             document.querySelector('.items-container').appendChild(clone);
           })
           for (let i = 1; i <= pageCount; i++) {
-            if(i==page)
+            if (i == page)
               paginationHTML += `<li class="page-item active"><button class="page-link" data-page="${i}" >${i}</button></li>`;
             else
               paginationHTML += `<li class="page-item"><button class="page-link" data-page="${i}" >${i}</button></li>`;
@@ -593,6 +594,7 @@
           alert("請求失敗");
         })
     }
+
     function deleteItem(id) {
       let url = "api/api_DeleteCategory.php?id=" + id + "&category=secondary_category";
       $.ajax({
