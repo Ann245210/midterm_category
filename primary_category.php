@@ -614,8 +614,8 @@
 
             clone.querySelector('.input-set-cate').value = item['id'];
             clone.querySelector('.input-set-cate-name').value = item['name']; //欄位的值顯示類別名稱
-            
-            
+
+
             sec_items.forEach(sec_item => { //foreach遍歷次類別欄位，並放進修改的次類別欄位中
               let tmp = `<option id="${sec_item['id']}" value="${sec_item['id']}">${sec_item['name']}</option>`;
               clone.querySelector('.secondary-multiple-select').innerHTML += tmp;
@@ -626,9 +626,9 @@
               var sec_item = document.createElement("li"); //新增li元素 (用來包次類別名稱)
               sec_item.textContent = obj['name'];
               clone.querySelector('.secNameList').appendChild(sec_item); //把先前的sec_item內容放到ul(.secNameList)裡面
-              selectedValues.push(obj['id']); 
+              selectedValues.push(obj['id']);
             })
-            // console.log(selectedValues)
+            console.log(selectedValues)
             clone.querySelector('.secondary-multiple-select').setAttribute('id', 'sec-multi-' + item['id']); //將修改的次類別欄位設置id
             document.querySelector('.items-container').appendChild(clone); //把先前的clone內容放到tbody(.items-container)裡面
             $('#sec-multi-' + item['id']).select2({ //將slect2下拉選單設置對應 item 的（modal-edit-' + item['id']）中。
@@ -640,7 +640,7 @@
 
           })
 
-          for (let i = 1; i <= pageCount; i++) {  //根據pagecount顯示正確頁碼
+          for (let i = 1; i <= pageCount; i++) { //根據pagecount顯示正確頁碼
             if (i == page)
               paginationHTML += `<li class="page-item active"><button class="page-link" data-page="${i}" >${i}</button></li>`;
             else
@@ -654,6 +654,10 @@
           alert("請求失敗");
         })
     }
+
+    //
+
+
 
     function deleteItem(id) {
       let url = "api/api_DeleteCategory.php?id=" + id;
