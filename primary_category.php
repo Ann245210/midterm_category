@@ -70,7 +70,7 @@
       <div class="text-end">
         <button class="btn btn-primary btn-view" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
           <i class="fa-solid fa-eye fa-fw text-white"></i></button>
-        <button class="btn btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
+        <button class="btn btn-success btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
           <i class="fa-solid fa-pen-to-square fa-fw"></i></button>
         <button class="btn btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#confirmModal" role="button">
           <i class="fa-solid fa-trash-can fa-fw"></i></i></button>
@@ -204,7 +204,7 @@
 </template>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-success position-absolute w-100"></div>
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <aside class="z-index-0 sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>

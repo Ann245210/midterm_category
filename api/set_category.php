@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmtModify->bind_param("si", $s_name, $s_id);
     
     if ($stmtModify->execute()) {
-      // 修改成功
+      // 修改成
       $responseData['modifySuccess'] = true;
     } else {
         // 修改失敗，處理錯誤

@@ -34,20 +34,28 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  <!-- argon dashboard plugin -->
+  <link rel="stylesheet" href="../assets/vendor/select2/dist/css/select2.min.css">
   <!-- 自定義樣式 -->
   <style>
     .input-width {
       width: 500px
     }
 
+    .set-width {
+      width: 700px;
+    }
+
     .pagination .page-item.active .page-link {
       background-color: #dee2e6;
       border-color: #dee2e6;
       box-shadow: none;
+
     }
   </style>
 </head>
-<!-- tbody列表內容 (單獨拉出來避免初始化時被清空)-->
+<!-- 列表內容 (單獨拉出來避免初始化時被清空)-->
+<!-- (template 不會被渲染到頁面) -->
 <template id="item-template">
   <tr>
     <td class="text-center">
@@ -56,16 +64,16 @@
     </td>
     <td class="text-center">
       <!--插入name .category-name -->
-      <p class="text-md mb-0 category-name"></p>
+      <p class="text-md  mb-0 category-name"></p>
     </td>
     <td class="text-center">
       <div class="text-end">
         <button class="btn btn-primary btn-view" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
           <i class="fa-solid fa-eye fa-fw text-white"></i></button>
-        <button class="btn btn-success btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
+        <button class="btn btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
           <i class="fa-solid fa-pen-to-square fa-fw"></i></button>
         <button class="btn btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#confirmModal" role="button">
-          <i class="fa-solid fa-trash-can fa-fw"></i></button>
+          <i class="fa-solid fa-trash-can fa-fw"></i></i></button>
       </div>
 
       <!-- MODAL模型 -->
@@ -78,6 +86,7 @@
               </h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <!-- 查看內容 -->
             <div class="modal-body">
               <div class="container">
                 <div class="row">
@@ -85,12 +94,21 @@
                     <table class="table table-bordered">
                       <tr>
                         <th>ID</th>
-                        <td class="category-id">
+                        <td class="category-id border-end">
                         </td>
                       </tr>
                       <tr>
-                        <th>次類別名稱</th>
-                        <td class="category-name border-end">
+                        <th>主類別名稱</th>
+                        <td class="border-end">
+                          <p class="text-md  mb-0 category-name"></p>
+                        </td>
+                      </tr>
+                      <tr class="border-end">
+                        <th>次類別</th>
+                        <td>
+                          <ul class="list-unstyled secNameList">
+                            <!-- 插入次類別名稱 -->
+                          </ul>
                         </td>
                       </tr>
                     </table>
@@ -103,7 +121,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
               <div>
                 <!-- 修改 -->
-                <button class="btn btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
+                <button class="btn btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal ">
                   修改
                 </button>
                 <!-- 刪除 -->
@@ -114,30 +132,43 @@
         </div>
       </div>
 
+      <!-- 刪除按鈕 -->
+
+
+
+
 
       <!-- 按修改會跳出來的東西 (完成)-->
       <div class="modal fade modal-edit" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">修改資料</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
+            <!-- p-id = primary category id -->
             <!-- s-id = seconday category id -->
+            <!-- p-name = primary name id -->
             <!-- s-name = seconday name id -->
             <!-- Form for editing user details -->
             <form action="api/set_category.php" method="post">
               <!-- 隱藏的input (只將資料傳送給後端) -->
-              <input type="hidden" name="category" value="secondary">
-              <input type="hidden" class="input-set-cate" name="s-id" value="">
+              <input type="hidden" class="input-set-cate" name="p-id" value="">
 
               <table class="table table-bordered">
                 <tr>
+                  <th>主類別</th>
+                  <td>
+                    <input type="text" class="form-control input-set-cate-name" name="p-name" value="">
+                  </td>
+                </tr>
+                <tr>
                   <th>次類別</th>
                   <td>
-                    <input type="text" class="form-control input-set-cate-name" name="s-name" value="">
-
+                    <select class="secondary-multiple-select form-control set-width" name="states[]" multiple="multiple">
+                      <!-- 次類別項目 -->
+                      <!-- <option value="AL">Alabama</option>-->
+                    </select>
                   </td>
                 </tr>
               </table>
@@ -155,7 +186,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">刪除次類別</h1>
+              <h1 class="modal-title fs-5" id="exampleModalLabel">刪除主類別資料</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -163,7 +194,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-              <button type="button" href="doDeleteUser.php?id=" class="btn btn-danger btn-delete deleteYes" role="button" data-bs-dismiss="modal">確認</button>
+              <a type="submit" class="btn btn-danger btn-delete deleteYes" role="button" data-bs-dismiss="modal">確認</a>
             </div>
           </div>
         </div>
@@ -173,13 +204,13 @@
 </template>
 
 <body class="g-sidenav-show   bg-gray-100">
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-300 bg-success position-absolute w-100"></div>
   <aside class="z-index-0 sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html " target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold">城市生機</span>
+        <span class="ms-1 font-weight-bold"> 城市生機</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -237,7 +268,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../lecture_pages/lecture.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">課程管理</span>
           </a>
@@ -245,7 +276,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../coupon_pages/coupon.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
             </div>
             <span class="nav-link-text ms-1">優惠券管理</span>
           </a>
@@ -280,11 +311,12 @@
         </li>
       </ul>
     </div>
+
   </aside>
   <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
+      <div class="container-fluid py-1 px-3 ">
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
 
@@ -313,33 +345,32 @@
       </div>
     </nav>
     <!-- SEARCH -->
-    <!-- 商品次類別列表 -->
+    <!-- 商品主類別列表 -->
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0">
               <div class="d-flex justify-content-between">
-                <h4>商品次類別列表</h4>
+                <h4>商品主類別列表</h4>
                 <div class="d-flex">
                   <div class="me-2 pt-2">新增</div>
-                  <a name="" id="" class="btn btn-primary" href="addSecCategory.php" role="button">
+                  <a name="" id="" class="btn btn-primary" href="addPriCategory.php" role="button">
                     <i class="fa-solid fa-plus fa-fw"></i>
                   </a>
                 </div>
               </div>
               <!-- 搜尋欄 -->
               <div class="col">
-                <!-- <form action=""> -->
-                <div class="input-group ">
-                  <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品次類別" name="search" />
-                  <button class="btn btn-primary" type="button" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
-                </div>
-                <!-- </form> -->
+                <form action="">
+                  <div class="input-group ">
+                    <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品主類別" name="search" />
+                    <button class="btn btn-primary" type="submit" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
+                  </div>
+                </form>
               </div>
               <div class="d-flex justify-content-between align-item-center">
                 <div id="total-count">
-
                 </div>
                 <div class="d-flex">
                   <div class="me-2 pt-2">排序</div>
@@ -355,12 +386,11 @@
             <div class="card-body px-0 pt-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
-                  <thead>
+                  <thead class="font-weight-bolder">
                     <tr>
                       <th class="text-center text-secondary font-weight-bolder opacity-7">編號</th>
-                      <th class="text-center text-secondary font-weight-bolder opacity-7 ">次分類項目</th>
-
-                      <th class="text-center text-secondary font-weight-bolder text-center opacity-7 "></th>
+                      <th class="text-center text-secondary font-weight-bolder opacity-7 ">主分類項目</th>
+                      <th class="text-center text-secondary font-weight-bolder opacity-7 "></th>
                     </tr>
                   </thead>
                   <tbody class="items-container">
@@ -373,12 +403,10 @@
           </div>
         </div>
       </div>
-      <!-- 返回主類別 -->
-      <div class="d-flex justify-content-start">
-        <a class="btn btn-primary mb-0 mt-1 py-2 text-end" href="primary_category.php" type="button"><i class="fa-solid fa-angles-left"></i> 返回主類別管理</a>
+      <!-- 新增類別 -->
+      <div class="d-flex justify-content-end">
+        <a class="btn btn-primary mb-0 mt-1 py-2 text-end" href="secondary_category.php" type="button"><i class="fa-solid fa-angles-right"></i> 進入次類別管理</a>
       </div>
-
-
       <!-- 分頁 -->
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
@@ -477,31 +505,33 @@
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <!-- argon dashboard plugin -->
+  <script src="../assets/vendor/select2/dist/js/select2.min.js"></script>
   <script>
-    $(document).ready(function(event) { //dom加載好後執行以下程式碼
+    $(document).ready(function() { //dom加載好後執行以下程式碼
       let search = ""
       let order = 0
 
       // init page
-      fetchPage(1)
+      fetchPage()
       // click page?
-      $('.pagination').on('click', '.page-link', function() {
-        const page = this.getAttribute('data-page');
-        var listItem = this.parentNode;
+      $('.pagination').on('click', '.page-link', function() { //選擇有pagination類的元素(ul)，運用事件委託，在.page-link元素上綁定點擊事件(li)，當page-link被點擊到時觸發函數
+        const page = this.getAttribute('data-page'); //定義page為點擊的那個頁碼
         fetchPage(page, search, order);
       });
       // click serach?
       $('#button-search').on('click', function() {
-        search = $('.search-text').val()
+        search = $('.search-text').val() //將輸入搜尋欄的文字賦值給變數search
         fetchPage(1, search, order);
       })
-      $('#button-search-input').on('input', function(event) {
+      $('#button-search-input').on('input', function(event) { //運用input事件在元素的值發生改變時觸發，讓使用者清空搜尋欄位時重新加載頁面
+        event.preventDefault();
         if (event.target.value == "") {
           search = "";
           fetchPage();
         }
       })
-      $('#button-search-input').on('keydown', function(event) {
+      $('#button-search-input').on('keydown', function(event) { //用enter鍵送出值
         // 檢查按下的鍵是否是 Enter 鍵
         if (event.key === "Enter" || event.keyCode === 13) {
           search = $('.search-text').val()
@@ -527,16 +557,15 @@
         }
         fetchPage(1, search, order);
       });
-    });
+    })
 
-    //分頁內容
     function fetchPage(page = 1, search = '', order = 0) {
-      let url = "api/get_secondary_category.php?p=" + page;
-      // console.log(url)
+      let url = "api/get_primary_category.php?p=" + page;
       if (search.length) //如果search.length>0，則url加上search字串值 
         url += '&search=' + search;
       if (order != 0) //如果有點選排序，則url加上order字串值
         url += '&order=' + order;
+
       $.ajax({
           method: "GET",
           url: url,
@@ -545,58 +574,93 @@
         .done(function(response) {
           $('.items-container').empty(); //初始化列表內容
           $('.pagination').empty(); //初始化分頁
-          // console.log(response);
           let items = response['data']
-          let pageCount = response['pageCount'];
+          let pageCount = response['pageCount']; //頁數
           let totalCount = response['totalCount']; //類別總數
+          let sec_items = response['sec_data']; //次類別項目
           let paginationHTML = "";
+          console.log(response);
 
           const pagination = document.querySelector(".pagination");
 
-          $('#total-count').text(`共 ${totalCount} 筆`);
+          $('#total-count').text(`共 ${totalCount} 筆`); //顯示幾筆資料
           var selectedValues = [];
 
           items.forEach(item => {
             const template = document.getElementById('item-template');
             const clone = document.importNode(template.content, true); //深度複製template裡面的內容
-            clone.querySelectorAll('.btn-view').forEach(el => {
+            clone.querySelectorAll('.btn-view').forEach(el => { //選擇 clone 元素中所有具有 btn-view 類別的元素。並返回一個 NodeList(包含所有匹配元素的集合)，並設置data-bs-target為屬性名。'#modal-view-' + item['id']為屬性值。
               el.setAttribute('data-bs-target', '#modal-view-' + item['id']);
             })
-            clone.querySelector('.modal-view').setAttribute('id', 'modal-view-' + item['id']);
+            clone.querySelector('.modal-view').setAttribute('id', 'modal-view-' + item['id']); //設置modal-view的id (與btn-view做對應)
+
             clone.querySelectorAll('.btn-edit').forEach(el => {
               el.setAttribute('data-bs-target', '#modal-edit-' + item['id']);
             })
             clone.querySelector('.modal-edit').setAttribute('id', 'modal-edit-' + item['id']);
+
             clone.querySelectorAll('.btn-delete').forEach(el => {
               el.setAttribute('data-bs-target', '#modal-delete-' + item['id']);
             })
             clone.querySelector('.modal-delete').setAttribute('id', 'modal-delete-' + item['id']);
-            clone.querySelectorAll('.category-id').forEach((el) => {
+
+            clone.querySelectorAll('.category-id').forEach((el) => { //串接列表的id
               el.textContent = item['id'];
             });
-            clone.querySelectorAll('.category-name').forEach((el) => {
+
+            clone.querySelectorAll('.category-name').forEach((el) => { //串接列表的name
               el.textContent = item['name']
             });
 
             clone.querySelector('.input-set-cate').value = item['id'];
-            clone.querySelector('.input-set-cate-name').value = item['name'];
-            document.querySelector('.items-container').appendChild(clone);
+            clone.querySelector('.input-set-cate-name').value = item['name']; //欄位的值顯示類別名稱
+
+
+            sec_items.forEach(sec_item => { //foreach遍歷次類別欄位，並放進修改的次類別欄位中
+              let tmp = `<option id="${sec_item['id']}" value="${sec_item['id']}">${sec_item['name']}</option>`;
+              clone.querySelector('.secondary-multiple-select').innerHTML += tmp;
+            })
+
+            selectedValues = [] //用來存儲被選擇的次類別id
+            item['sec_id'].forEach((obj) => {
+              var sec_item = document.createElement("li"); //新增li元素 (用來包次類別名稱)
+              sec_item.textContent = obj['name'];
+              clone.querySelector('.secNameList').appendChild(sec_item); //把先前的sec_item內容放到ul(.secNameList)裡面
+              selectedValues.push(obj['id']);
+            })
+            console.log(selectedValues)
+            clone.querySelector('.secondary-multiple-select').setAttribute('id', 'sec-multi-' + item['id']); //將修改的次類別欄位設置id
+            document.querySelector('.items-container').appendChild(clone); //把先前的clone內容放到tbody(.items-container)裡面
+            $('#sec-multi-' + item['id']).select2({ //將slect2下拉選單設置對應 item 的（modal-edit-' + item['id']）中。
+              dropdownParent: $('#modal-edit-' + item['id'])
+            });
+
+            $('#sec-multi-' + item['id']).val(selectedValues) //將 selectedValues 陣列中的值設置為選單的選中值，顯示哪些次類別被選中。
+            $('#sec-multi-' + item['id']).trigger('change.select2');
+
           })
-          for (let i = 1; i <= pageCount; i++) {
+
+          for (let i = 1; i <= pageCount; i++) { //根據pagecount顯示正確頁碼
             if (i == page)
               paginationHTML += `<li class="page-item active"><button class="page-link" data-page="${i}" >${i}</button></li>`;
             else
               paginationHTML += `<li class="page-item"><button class="page-link" data-page="${i}" >${i}</button></li>`;
           }
           pagination.innerHTML = paginationHTML;
+
+
         })
         .fail(function() {
           alert("請求失敗");
         })
     }
 
+    //
+
+
+
     function deleteItem(id) {
-      let url = "api/api_DeleteCategory.php?id=" + id + "&category=secondary_category";
+      let url = "api/api_DeleteCategory.php?id=" + id;
       $.ajax({
           method: "GET",
           url: url,
@@ -621,7 +685,7 @@
       // 提取出 item['id']，它是在 "#modal-delete-" 之后的部分
       var itemId = targetId.replace('#modal-delete-', '');
 
-      //  itemId 来进行删除操作或其他邏輯處理
+      // 现在您可以使用 itemId 来进行删除操作或其他邏輯處理
       console.log("項目 ID:", itemId);
       deleteItem(itemId);
     });
