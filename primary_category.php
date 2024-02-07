@@ -225,7 +225,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../product-list_pages/product-list.php">
+          <a class="nav-link " href="../product_pages/product-list.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="fa-sharp fa-solid fa-leaf text-dark text-sm opacity-10 fa-fw"></i>
             </div>
@@ -268,7 +268,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../lecture_pages/lecture.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
+            <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">課程管理</span>
           </a>
@@ -365,7 +365,7 @@
                 <form action="">
                   <div class="input-group ">
                     <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品主類別" name="search" />
-                    <button class="btn btn-primary" type="submit" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
+                    <button class="btn btn-primary" type="button" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
                   </div>
                 </form>
               </div>
