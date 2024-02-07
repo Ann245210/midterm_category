@@ -70,7 +70,7 @@
       <div class="text-end">
         <button class="btn btn-primary btn-view" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
           <i class="fa-solid fa-eye fa-fw text-white"></i></button>
-        <button class="btn btn-success btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
+        <button class="btn btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal">
           <i class="fa-solid fa-pen-to-square fa-fw"></i></button>
         <button class="btn btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#confirmModal" role="button">
           <i class="fa-solid fa-trash-can fa-fw"></i></i></button>
@@ -146,20 +146,20 @@
               <h1 class="modal-title fs-5" id="exampleModalLabel">修改資料</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <!-- p-id = primary category id -->
+            <!-- p_id = primary category id -->
             <!-- s-id = seconday category id -->
-            <!-- p-name = primary name id -->
+            <!-- p_name = primary name id -->
             <!-- s-name = seconday name id -->
             <!-- Form for editing user details -->
-            <form action="api/set_category.php" method="post">
+            <form action="api/set_category_copy.php" method="post" id="modify-form">
               <!-- 隱藏的input (只將資料傳送給後端) -->
-              <input type="hidden" class="input-set-cate" name="p-id" value="">
+              <input type="hidden" class="input-set-cate" name="p_id" value="">
 
               <table class="table table-bordered">
                 <tr>
                   <th>主類別</th>
                   <td>
-                    <input type="text" class="form-control input-set-cate-name" name="p-name" value="">
+                    <input type="text" class="form-control input-set-cate-name" name="p_name" value="">
                   </td>
                 </tr>
                 <tr>
@@ -174,7 +174,7 @@
               </table>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-danger">確認</button>
+                <button type="button" class="btn btn-danger modifyYes" data-bs-dismiss="modal">確認</button>
               </div>
             </form>
           </div>
@@ -225,7 +225,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../product_pages/product-list.php">
+          <a class="nav-link " href="../product-list_pages/product-list.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="fa-sharp fa-solid fa-leaf text-dark text-sm opacity-10 fa-fw"></i>
             </div>
@@ -268,7 +268,7 @@
         <li class="nav-item">
           <a class="nav-link " href="../lecture_pages/lecture.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-graduation-cap text-dark text-sm opacity-10 fa-fw"></i>
             </div>
             <span class="nav-link-text ms-1">課程管理</span>
           </a>
@@ -276,7 +276,8 @@
         <li class="nav-item">
           <a class="nav-link " href="../coupon_pages/coupon.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
+              <i class="fa-solid fa-ticket-simple text-dark text-sm opacity-10 fa-fw"></i>
+
             </div>
             <span class="nav-link-text ms-1">優惠券管理</span>
           </a>
@@ -509,14 +510,16 @@
   <script src="../assets/vendor/select2/dist/js/select2.min.js"></script>
   <script>
     $(document).ready(function() { //dom加載好後執行以下程式碼
-      let search = ""
-      let order = 0
+      let search = "";
+      let order = 0;
+      let page = 1;
 
       // init page
       fetchPage()
+
       // click page?
       $('.pagination').on('click', '.page-link', function() { //選擇有pagination類的元素(ul)，運用事件委託，在.page-link元素上綁定點擊事件(li)，當page-link被點擊到時觸發函數
-        const page = this.getAttribute('data-page'); //定義page為點擊的那個頁碼
+        page = this.getAttribute('data-page'); //定義page為點擊的那個頁碼
         fetchPage(page, search, order);
       });
       // click serach?
@@ -556,6 +559,44 @@
             break;
         }
         fetchPage(1, search, order);
+      });
+
+      //修改
+
+      $('.items-container').on('click', '.modifyYes', function() {
+
+        // 使用 jQuery 的 .closest() 方法找到當前按鈕最近的表單元素
+        var $form = $(this).closest('form');
+
+        // 獲取表單中的值
+        var p_id = $form.find('[name="p_id"]').val();
+        var p_name = $form.find('[name="p_name"]').val();
+
+        // 對於多選選項，需要遍歷並收集所有選中的值
+        var states = $form.find('[name="states[]"]').map(function() {
+          return $(this).val();
+        }).get(); // .get() 將 jQuery 對象轉換為普通數組
+
+        let url = "api/set_category.php";
+        $.ajax({
+            method: "POST",
+            url: url,
+            dataType: "json",
+            data: {
+              p_id: p_id,
+              p_name: p_name,
+              states: states
+
+            }
+          })
+          .done(function(response) {
+            fetchPage(page, search, order);
+            
+          })
+          .fail(function(error) {
+            console.log(error);
+            alert("請求失敗");
+          })
       });
     })
 
@@ -655,10 +696,11 @@
         })
     }
 
-    //
 
 
 
+
+    //刪除
     function deleteItem(id) {
       let url = "api/api_DeleteCategory.php?id=" + id;
       $.ajax({
@@ -685,7 +727,7 @@
       // 提取出 item['id']，它是在 "#modal-delete-" 之后的部分
       var itemId = targetId.replace('#modal-delete-', '');
 
-      // 现在您可以使用 itemId 来进行删除操作或其他邏輯處理
+      // 使用 itemId 来进行删除操作或其他邏輯處理
       console.log("項目 ID:", itemId);
       deleteItem(itemId);
     });
