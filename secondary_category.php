@@ -124,26 +124,26 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <!-- s-id = seconday category id -->
-            <!-- s-name = seconday name id -->
+            <!-- s_id = secondary category id -->
+            <!-- s_name = secondary name id -->
             <!-- Form for editing user details -->
             <form action="api/set_category.php" method="post">
               <!-- 隱藏的input (只將資料傳送給後端) -->
               <input type="hidden" name="category" value="secondary">
-              <input type="hidden" class="input-set-cate" name="s-id" value="">
+              <input type="hidden" class="input-set-cate" name="s_id" value="">
 
               <table class="table table-bordered">
                 <tr>
                   <th>次類別</th>
                   <td>
-                    <input type="text" class="form-control input-set-cate-name" name="s-name" value="">
+                    <input type="text" class="form-control input-set-cate-name" name="s_name" value="">
 
                   </td>
                 </tr>
               </table>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="submit" class="btn btn-danger">確認</button>
+                <button type="button" class="btn btn-danger modifyYes" data-bs-dismiss="modal">確認</button>
               </div>
             </form>
           </div>
@@ -194,7 +194,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../product-list_pages/product-list.php">
+          <a class="nav-link " href="../product_pages/product-list.php">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="fa-sharp fa-solid fa-leaf text-dark text-sm opacity-10 fa-fw"></i>
             </div>
@@ -345,7 +345,7 @@
                   <div class="me-2 pt-2">排序</div>
                   <div class="btn-group sort-group">
                     <a class="btn btn-primary btn-sort" data-action="sort-1-9" href="product-list.php?order=1&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-short-wide fa-fw"></i></a>
-                    <a class="btn btn-primary btn-sort" data-action="sort-9-1" href="product-lst.php?order=2&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
+                    <a class="btn btn-primary btn-sort" data-action="sort-9-1" href="product-list.php?order=2&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
                     <a class="btn btn-primary btn-sort" data-action="sort-a-z" href="product-list.php?order=3&p=<?= $p ?>">name <i class="fa-solid fa-arrow-down-short-wide fa-fw"></i></a>
                     <a class="btn btn-primary btn-sort" data-action="sort-z-a" href="product-list.php?order=4&p=<?= $p ?>">name<i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
                   </div>
@@ -479,14 +479,17 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script>
     $(document).ready(function(event) { //dom加載好後執行以下程式碼
-      let search = ""
-      let order = 0
+      let search = "";
+      let order = 0;
+      let page = 1;
+      
 
       // init page
-      fetchPage(1)
+      fetchPage()
+
       // click page?
       $('.pagination').on('click', '.page-link', function() {
-        const page = this.getAttribute('data-page');
+        page = this.getAttribute('data-page');
         var listItem = this.parentNode;
         fetchPage(page, search, order);
       });
@@ -527,12 +530,43 @@
         }
         fetchPage(1, search, order);
       });
+
+      //修改
+      $('.items-container').on('click', '.modifyYes', function() {
+        // 使用 jQuery 的 .closest() 方法找到當前按鈕最近的表單元素
+        var $form = $(this).closest('form');
+
+        //獲取表單中的值
+        var category = $form.find('[name = "category"]').val();
+        var s_id = $form.find('[name = "s_id"]').val();
+        var s_name = $form.find('[name = "s_name"]').val();
+       
+        let url = "api/set_category.php";
+        $.ajax({
+            method: "POST",
+            url: url,
+            dataType: "json",
+            data: {
+              category : category,
+              s_id: s_id,
+              s_name: s_name,
+            }
+          })
+          .done(function(response) {
+            console.log("請求成功", response);
+            fetchPage(page, search, order);
+          })
+          .fail(function(error) {
+            console.log(error);
+            alert("請求失敗")
+          })
+      })
     });
 
     //分頁內容
     function fetchPage(page = 1, search = '', order = 0) {
       let url = "api/get_secondary_category.php?p=" + page;
-      // console.log(url)
+      console.log(url)
       if (search.length) //如果search.length>0，則url加上search字串值 
         url += '&search=' + search;
       if (order != 0) //如果有點選排序，則url加上order字串值

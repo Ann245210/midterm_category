@@ -55,22 +55,18 @@ if (!$result) {
   exit;
 }
 
+//debug
 $data = [];
 while ($row = $result->fetch_assoc()) {
   $data[] = $row;
 }  //頁面資料
 
-// ??
-$dataAll = [];
-while ($rowAll = $resultAll->fetch_assoc()) {
-  $dataAll[] = $rowAll;
-}  
+
 
 $myArray = array(
   "data" => $data,
   "pageCount" => $pageCount,
   "totalCount" => $categoryTotalCount,
-  "dataAll" => $dataAll
 );
 
 

@@ -5,13 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   if (isset($_POST['category']) and $_POST['category'] == "secondary") { //確定操作的是修改次類別
-    if (!isset($_POST['s-id']) or !isset($_POST['s-name'])) { //如果缺少次類別的id或name就重新定向
+    if (!isset($_POST['s_id']) or !isset($_POST['s_name'])) { //如果缺少次類別的id或name就重新定向
       header("location: ../secondary_category.php", true, 302);
       exit(1);
     }
     //修改次類別名稱
-    $s_id = $_POST['s-id'];
-    $s_name = $_POST['s-name'];
+    $s_id = $_POST['s_id'];
+    $s_name = $_POST['s_name'];
     $stmtModify = $conn->prepare("UPDATE secondary_category SET name=? WHERE id = ?");
     $stmtModify->bind_param("si", $s_name, $s_id);
     $responseData = array();
@@ -94,10 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // UPDATE secondary_category SET primary_id=0 WHERE id NOT IN (1,2,3) AND primary_id = 2;
     // UPDATE secondary_category SET primary_id=2 WHERE id IN (1,2,3);
     // Convert the data array to JSON and set the appropriate content type
-    $jsonData = json_encode($responseData);
-    header('Content-Type: application/json');
-    echo $jsonData;
+  
   }
+  $jsonData = json_encode($responseData);
+  header('Content-Type: application/json');
+  echo $jsonData;
 }
 // Close the database connection
 $conn->close();
