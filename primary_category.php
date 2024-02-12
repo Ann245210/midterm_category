@@ -147,9 +147,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- p_id = primary category id -->
-            <!-- s-id = seconday category id -->
             <!-- p_name = primary name id -->
-            <!-- s-name = seconday name id -->
             <!-- Form for editing user details -->
             <form action="api/set_category_copy.php" method="post" id="modify-form">
               <!-- 隱藏的input (只將資料傳送給後端) -->
@@ -363,12 +361,12 @@
               </div>
               <!-- 搜尋欄 -->
               <div class="col">
-                <form action="">
+                <!-- <form action=""> 避免頁面跳轉 -->
                   <div class="input-group ">
                     <input style="height: 41px;" type="search" id="button-search-input" class="form-control box-sizing inline-block search-text" placeholder="商品主類別" name="search" />
                     <button class="btn btn-primary" type="button" id="button-search"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
                   </div>
-                </form>
+                <!-- </form> -->
               </div>
               <div class="d-flex justify-content-between align-item-center">
                 <div id="total-count">
@@ -377,7 +375,7 @@
                   <div class="me-2 pt-2">排序</div>
                   <div class="btn-group sort-group">
                     <a class="btn btn-primary btn-sort" data-action="sort-1-9" href="product-list.php?order=1&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-short-wide fa-fw"></i></a>
-                    <a class="btn btn-primary btn-sort" data-action="sort-9-1" href="product-lst.php?order=2&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
+                    <a class="btn btn-primary btn-sort" data-action="sort-9-1" href="product-list.php?order=2&p=<?= $p ?>">id <i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
                     <a class="btn btn-primary btn-sort" data-action="sort-a-z" href="product-list.php?order=3&p=<?= $p ?>">name <i class="fa-solid fa-arrow-down-short-wide fa-fw"></i></a>
                     <a class="btn btn-primary btn-sort" data-action="sort-z-a" href="product-list.php?order=4&p=<?= $p ?>">name<i class="fa-solid fa-arrow-down-wide-short fa-fw"></i></a>
                   </div>
@@ -528,7 +526,6 @@
         fetchPage(1, search, order);
       })
       $('#button-search-input').on('input', function(event) { //運用input事件在元素的值發生改變時觸發，讓使用者清空搜尋欄位時重新加載頁面
-        event.preventDefault();
         if (event.target.value == "") {
           search = "";
           fetchPage();
@@ -541,6 +538,7 @@
           fetchPage(1, search, order);
         }
       });
+
       // click order?
       $('.sort-group').on('click', '.btn-sort', function() {
         var action = $(this).data('action'); //獲取data-action的值
@@ -575,7 +573,7 @@
         // 對於多選選項，需要遍歷並收集所有選中的值
         var states = $form.find('[name="states[]"]').map(function() {
           return $(this).val();
-        }).get(); // .get() 將 jQuery 對象轉換為普通數組
+        }).get(); // .get() 將 jQuery 物件轉換為普通數組
 
         let url = "api/set_category.php";
         $.ajax({
